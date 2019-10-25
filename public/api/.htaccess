@@ -1,9 +1,0 @@
-RewriteEngine On
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(search)\/(.+)$ list.php?search=$2 [NC,L]
-RewriteRule ^(rank)\/?(.*)$ list.php?country=$2 [NC,L]
-RewriteRule ^(profile)\/([0-9]+)$ $1.php?id=$2 [NC,L]
-RewriteRule ^topscore\/([0-9]+)\/?([0-9]?)$ score.php?id=$1&sort=1&page=$2 [NC,L]
-RewriteRule ^recentscore\/([0-9]+)\/?([0-9]?)$ score.php?id=$1&sort=2&page=$2 [NC,L]
-#RewriteRule ^([^.\/]+)$ $1.php [NC,L]

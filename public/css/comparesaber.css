@@ -1,0 +1,135 @@
+* {
+    box-sizing: border-box;
+}
+*:focus {
+    outline: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #fff;
+}
+
+p {
+    margin: 0;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+}
+
+#toggle-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #000;
+}
+#players {
+    width: 100%;
+    height: 130px;
+    text-align: center;
+}
+#player1, #player2 {
+    float: left;
+    width: 50%;
+}
+#player1 {
+    height: 100%;
+    background-color: #df3e4e;
+    line-height: 40px;
+    font-weight: bold;
+    font-size: 24px;
+}
+#player2 {
+    height: 100%;
+    background-color: #1d57a9;
+    line-height: 40px;
+    font-weight: bold;
+    font-size: 24px;
+}
+.url {
+    padding: 5px 10px;
+    width: 300px;
+    border: 0;
+    border-radius: 5px;
+    line-height: 20px;
+    text-align: center;
+}
+#compare {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 106px;
+    height: 100px;
+    background: url(/images/compare.png);
+    border: 0;
+    cursor: pointer;
+}
+#toggle {
+    float: left;
+    width: 100%;
+    height: 20px;
+    background: #777;
+    border: 0;
+    cursor: pointer;
+}
+
+
+#result {
+    float: left;
+    padding-top: 160px;
+    width: 100%;
+    height: 100%;
+}
+#progress-bar {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+    background: #111;
+}
+#progress-bar>.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+}
+#progress-bar>.progress-bar {
+    width: 0;
+    height: 100%;
+    background: #953682;
+}
+#result>table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+#result>table tr {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+    text-align: center;
+}
+#result>table tr>td {
+    width: 30%;
+    height: 60px;
+}
+#result>table tr>.song {
+    width: 40%;
+    background: #333;
+}
+#result>table tr>.player1pp.win {
+    background: #f70;
+}
+#result>table tr>.player2pp.win {
+    background: #07f;
+}
