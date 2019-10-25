@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return "<h1>준비중입니다.</h1>";
 });
+
+Route::get('/api/{param}/{name}', 'Api@list')->where(['param' => '(search|rank)']);
+Route::get('/api/profile/{id}', 'Api@profile')->where(['id' => '[0-9]+']);
+Route::get('/api/{param}/{id}/{page?}', 'Api@score')->where(['param' => '(top|recent)score', 'id' => '[0-9]+', 'page' => '[0-9]+']);
