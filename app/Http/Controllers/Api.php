@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 
 class Api extends Controller
 {
-    public function list($param, $name) {
-        if($param=="rank") $param = "country";
+    public function list($param, $name='') {
+        if($param=="rank" && $name!='')
+            $param = "country";
         $url = "http://scoresaber.com/global?$param=$name";
         if($fp = fopen($url, 'r')) {
             $content = '';
@@ -48,6 +49,7 @@ class Api extends Controller
             while($line = fread($fp, 1024)) $content .= $line;
 
             preg_match('/title>(.+)\'/', $content, $name);
+            if(is_null($name)) return '';
             preg_match('/avatar">\n\s+<img.*?src="(.*?)"/', $content, $avatar);
             preg_match('/global">.*#([0-9,]+).*#([0-9,]+)<\/a>/', $content, $rank);
             preg_match('/([0-9,.]+)pp/', $content, $pp);
@@ -80,6 +82,7 @@ class Api extends Controller
         
             preg_match_all('/rank">\n\s+#([0-9,]+)/', $tbody, $res);
             $rank = $res[1];
+            if(is_null($rank)) return '';
             preg_match_all('/pp">(.*?)\s?<span/', $tbody, $res);
             $name = $res[1];
             preg_match_all('/">(Expert\+|Expert|Hard|Normal|Easy)<\/span/', $tbody, $res);
