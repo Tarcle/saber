@@ -92,7 +92,7 @@ class Api extends Controller
             $pp = $res[1];
             preg_match_all('/ppWeightedValue">\(([0-9,.]+)<span/', $tbody, $res);
             $pp_weight = $res[1];
-            preg_match_all('/accuracy: ([0-9,.]+%(\s\([A-Z,]*\))?)<\/span/', $tbody, $res);
+            preg_match_all('/(accuracy|score): ([0-9,.]+%?(\s\([A-Z,]*\))?)<\/span/', $tbody, $res);
             $accuracy = $res[1];
             
             $list = [];
