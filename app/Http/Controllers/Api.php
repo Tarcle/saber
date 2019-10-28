@@ -82,7 +82,7 @@ class Api extends Controller
             $rank = $res[1];
             preg_match_all('/pp">(.*?)\s?<span/', $tbody, $res);
             $name = $res[1];
-            preg_match_all('/#[0-9a-z]{6};">(.*?)<\/span/', $tbody, $res);
+            preg_match_all('/">(Expert\+|Expert|Hard|Normal|Easy)<\/span/', $tbody, $res);
             $difficult = $res[1];
             preg_match_all('/mapper">(.*?)<\/span/', $tbody, $res);
             $mapper = $res[1];
@@ -92,7 +92,7 @@ class Api extends Controller
             $pp = $res[1];
             preg_match_all('/ppWeightedValue">\(([0-9,.]+)<span/', $tbody, $res);
             $pp_weight = $res[1];
-            preg_match_all('/accuracy: ([0-9,.]+%(\s\([A-Z,]+\))?)<\/span/', $tbody, $res);
+            preg_match_all('/accuracy: ([0-9,.]+%(\s\([A-Z,]*\))?)<\/span/', $tbody, $res);
             $accuracy = $res[1];
             
             $list = [];
