@@ -98,7 +98,7 @@ class Api extends Controller
             $list = [];
             for($j=0; $j<count($name); $j++) {
                 array_push($list, [
-                    'name' => preg_replace("!([\b\t\n\r\f\\\"\\'])!", "\\\\\\1", $name[$j]),
+                    'name' => $name[$j],
                     'difficult' => $difficult[$j],
                     'mapper' => $mapper[$j],
                     'rank' => (int)str_replace(',', '', $rank[$j]),
@@ -108,7 +108,7 @@ class Api extends Controller
                     'time' => $time[$j],
                 ]);
             }
-            return json_encode($list, JSON_UNESCAPED_UNICODE);
+            return str_replace('&quot;', '\\"', json_encode($list, JSON_UNESCAPED_UNICODE));
         }
     }
 }
