@@ -98,7 +98,7 @@ class Api extends Controller
             $list = [];
             for($j=0; $j<count($name); $j++) {
                 array_push($list, [
-                    'name' => $name[$j],
+                    'name' => str_replace('"', '\\"', $name[$j]),
                     'difficult' => $difficult[$j],
                     'mapper' => $mapper[$j],
                     'rank' => (int)str_replace(',', '', $rank[$j]),
