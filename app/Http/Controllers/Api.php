@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 
 class Api extends Controller
 {
-    public function list($param, $name) {
-        if($param=="rank") $param = "country";
+    public function list($param, $name='') {
+        if($param=="rank" && $name!='')
+            $param = "country";
         $url = "http://scoresaber.com/global?$param=$name";
         if($fp = fopen($url, 'r')) {
             $content = '';
@@ -48,6 +49,7 @@ class Api extends Controller
             while($line = fread($fp, 1024)) $content .= $line;
 
             preg_match('/title>(.+)\'/', $content, $name);
+            if(is_null($name)) return '';
             preg_match('/avatar">\n\s+<img.*?src="(.*?)"/', $content, $avatar);
             preg_match('/global">.*#([0-9,]+).*#([0-9,]+)<\/a>/', $content, $rank);
             preg_match('/([0-9,.]+)pp/', $content, $pp);
@@ -80,9 +82,10 @@ class Api extends Controller
         
             preg_match_all('/rank">\n\s+#([0-9,]+)/', $tbody, $res);
             $rank = $res[1];
+            if(is_null($rank)) return '';
             preg_match_all('/pp">(.*?)\s?<span/', $tbody, $res);
             $name = $res[1];
-            preg_match_all('/">(Expert\+|Expert|Hard|Normal|Easy)<\/span/i', $tbody, $res);
+            preg_match_all('/">(Expert\+|Expert|Hard|Normal|Easy)<\/span/', $tbody, $res);
             $difficult = $res[1];
             preg_match_all('/mapper">(.*?)<\/span/', $tbody, $res);
             $mapper = $res[1];
@@ -92,8 +95,9 @@ class Api extends Controller
             $pp = $res[1];
             preg_match_all('/ppWeightedValue">\(([0-9,.]+)<span/', $tbody, $res);
             $pp_weight = $res[1];
-            preg_match_all('/accuracy: ([0-9,.]+%(\s\([A-Z,]+\))?)<\/span/', $tbody, $res);
-            $accuracy = $res[1];
+            preg_match_all('/(accuracy|score): ([0-9,.]+%?(\s\([A-Z,]*\))?)<\/span/', $tbody, $res);
+            $accuracy = $res[2];
+            
             $list = [];
             for($j=0; $j<count($name); $j++) {
                 array_push($list, [
@@ -107,7 +111,7 @@ class Api extends Controller
                     'time' => $time[$j],
                 ]);
             }
-            return json_encode($list, JSON_UNESCAPED_UNICODE);
+            return str_replace('&quot;', '\\"', json_encode($list, JSON_UNESCAPED_UNICODE));
         }
     }
 }
