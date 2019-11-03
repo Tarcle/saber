@@ -51,6 +51,14 @@
         </div>
     </script>
     <script src="/js/vue.min.js"></script>
+    <script src="/js/data.js"></script>
     <script src="/js/compare.js"></script>
+    <script>
+        function test() {
+            app.player1data = JSON.parse(p1d);
+            app.player2data = JSON.parse(p2d);
+            app.load_count = 30;
+        }
+    </script>
 </body>
 </html>

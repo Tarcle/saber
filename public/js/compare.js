@@ -53,7 +53,15 @@ var app = new Vue({
                                 app.player1data.sort((a,b) => b.pp - a.pp);
                                 app.player2data.sort((a,b) => b.pp - a.pp);
                             }
-                        } else alert("데이터 로드에 실패했습니다.");
+                        } else {
+                            alert("데이터 로드에 실패했습니다.");
+                            with(app) {
+                                player1name = '';
+                                player2name = '';
+                                player1data = [];
+                                player2data = [];
+                            }
+                        }
                     }
                 }
                 xhr.open("GET", url, true);
