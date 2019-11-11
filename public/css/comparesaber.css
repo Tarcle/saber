@@ -24,11 +24,8 @@ p {
     width: 100%;
     height: 100%;
 }
-#app.result {
-    /* background: url(/images/bg_result.png) no-repeat fixed; */
-}
 
-#toggle-box {
+#search-box {
     position: relative;
     float: left;
     width: 100%;
@@ -38,6 +35,7 @@ p {
 #players {
     width: 100%;
     height: 120px;
+    border-bottom: 1px solid #fff;
     text-align: center;
 }
 #player1, #player2 {
@@ -121,12 +119,12 @@ p {
 #progress-bar {
     width: 100%;
     height: 100%;
-    background: #000 url(/images/bg_home.png) no-repeat center top -90px;
+    background: #000 url(/images/bg_home.png) no-repeat center top;
     pointer-events: none;
 }
 #progress-bar>.progress-bar {
     position: absolute;
-    top: 86px;
+    top: 176px;
     left: calc(50% - 27px);
     width: 272px;
     height: 272px;
@@ -142,10 +140,41 @@ p {
     font-weight: bold;
 }
 /* 결과창 */
+/* 닉네임 표기 */
+#result>.head {
+    position: fixed;
+    top: 0;
+    left: 0;
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid #fff;
+}
+#result>.head>p {
+    float: left;
+    width: 50%;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 18px;
+}
+#result>.head>p:first-child {
+    padding-right: 20%;
+    background: #99001c;
+}
+#result>.head>p:last-child {
+    padding-left: 20%;
+    background: #1d57a9;
+}
+#result>.head.toggle~table {
+    margin-top: 60px;
+}
+/* 결과 테이블 */
 #result>table {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 18px;
 }
 #result>table tr {
     width: 100%;
@@ -153,22 +182,28 @@ p {
     text-align: center;
 }
 #result>table tr>td {
+    padding: 0;
     width: 30%;
-    height: 60px;
-    background: rgba(0,0,0,.7);
+    background: rgba(200,200,200,.8);
+    line-height: 35px;
+    color: #fff;
+    text-shadow:-1px 0 #000,0 1px #000,1px 0 #000,0 -1px #000;
 }
 #result>table tr>.song {
     width: 40%;
-    background: rgba(51,51,51,.7);
-}
-#result>table tr>.player1pp.win {
-    background: rgba(255,119,0,.7);
-}
-#result>table tr>.player2pp.win {
-    background: rgba(0,119,255,.7);
+    background: rgba(175,175,175,.8);
+    color: #000;
+    text-shadow:-1px 0 #fff,0 1px #fff,1px 0 #fff,0 -1px #fff;
+    font-weight: bold;
 }
 .easy {color:MediumSeaGreen}
 .normal {color:#59b0f4}
 .hard {color:tomato}
 .expert {color:#bf2a42}
 .expertplus {color:#8f48db}
+#result>table tr>.player1pp.win {
+    background: rgba(153,0,28,.8);
+}
+#result>table tr>.player2pp.win {
+    background: rgba(29,87,169,.8);
+}

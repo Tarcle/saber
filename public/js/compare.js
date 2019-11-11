@@ -4,31 +4,40 @@ var app = new Vue({
     data: {
         load_page: 15, //불러올 페이지 수 (한 페이지 8곡)
         
-        opened: true, //검색칸 토글
+        toggle: false,
         url1: 'http://scoresaber.com/u/76561198053868259', //왼쪽 주소
-        url2: 'http://scoresaber.com/u/76561198298645747', //오른쪽 주소
+        url2: '', //오른쪽 주소
         player1name: '', //왼쪽 이름
         player2name: '', //오른쪽 이름
         player1data: [], //왼쪽 데이터
         player2data: [], //오른쪽 데이터
         load_count: 0, //불러온 페이지 개수
+        failed: false, //데이터 로드 실패했는지
     },
     mounted: function () {
         with(this) {
-            url1 = getCookie('url1') ? getCookie('url1') : url1;
-            url2 = getCookie('url2') ? getCookie('url2') : url2;
+            url1 = getCookie('player1url') ? getCookie('player1url') : url1;
+            url2 = getCookie('player2url') ? getCookie('player2url') : url2;
             player1name = getCookie('player1name') ? getCookie('player1name') : player1name;
             player2name = getCookie('player2name') ? getCookie('player2name') : player2name;
+        }
+
+        window.onscroll = function () {
+            if(window.scrollY >= 120) app.toggle = true;
+            else app.toggle = false;
         }
     },
     methods: {
         compare: function () {
             with(this) {
+                failed = false;
                 player1name = '';
                 player2name = '';
                 player1data = [];
                 player2data = [];
                 getSongs();
+                setCookie('player1url', url1);
+                setCookie('player2url', url2);
             }
         },
         getSongs: function () {
@@ -36,84 +45,84 @@ var app = new Vue({
             app.result = [[], []]; //렌더링 전 결과 저장
 
             app.load_count = 0;
+
+            url1 = this.url1.slice(-17).replace('/', '');
+            url2 = this.url2.slice(-17).replace('/', '');
+            loadName(url1, 1);
+            loadName(url2, 2);
             for(i=1; i<=app.load_page; i++) {
-                url = this.url1.slice(-17).replace('/', '');
-                loadData('/api/topscore/'+url+'/'+i, 0);
-                url = this.url2.slice(-17).replace('/', '');
-                loadData('/api/topscore/'+url+'/'+i, 1);
+                loadData(url1+'/'+i, 1);
+                loadData(url2+'/'+i, 2);
             }
 
-            function loadData(url, player) {
-                var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+            function loadName(url, player) {
+                xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
                 xhr.onreadystatechange = function () {
                     if(this.readyState == 4) {
-                        if(this.status == 200) {
-                            app['player'+(player+1)+'data'] = app['player'+(player+1)+'data'].concat(JSON.parse(this.response));
-                            if(++app.load_count >= app.load_page*2) {
-                                app.player1data.sort((a,b) => b.pp - a.pp);
-                                app.player2data.sort((a,b) => b.pp - a.pp);
-                            }
-                        } else {
-                            alert("데이터 로드에 실패했습니다.");
-                            with(app) {
+                        if(!app.failed) {
+                            if(this.status == 200) {
+                                app['player'+player+'name'] = JSON.parse(this.response)['name'];
+                                app.setCookie('player'+player+'name', app['player'+player+'name'])
+                            } else with(app) {
+                                failed = true;
                                 player1name = '';
                                 player2name = '';
                                 player1data = [];
                                 player2data = [];
+                                load_count = 0;
+                                alert("데이터 로드에 실패했습니다.");
                             }
                         }
                     }
                 }
-                xhr.open("GET", url, true);
+                xhr.open("GET", '/api/profile/'+url, true);
                 xhr.send();
-            }
-
-            /* for(i=1; i<=app.load_page; i++) {
-                loadData('http://cors-anywhere.herokuapp.com/'+this.url1+'&page='+i+'&sort=1', 0);
-                loadData('http://cors-anywhere.herokuapp.com/'+this.url2+'&page='+i+'&sort=1', 1);
             }
             function loadData(url, player) {
                 var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
                 xhr.onreadystatechange = function () {
                     if(this.readyState == 4) {
-                        if(this.status == 200) {
-                            text = this.response.replace(/<IMG(.*?)>/gi, "");
-                            html = document.createElement('div');
-                            html.innerHTML = text;
-                            if(!app.name[player]) app.name[player] = html.querySelector('.title').innerText.trim();
-                            songs = html.querySelectorAll("table.ranking.songs>tbody>tr");
-                            for(i=0; i<songs.length; i++) {
-                                song = songs[i];
-                                name_html = song.querySelector("th.song a").innerHTML;
-                                pp = song.querySelector("th.score .ppValue").innerText;
-                                pp_html = song.querySelector("th.score").innerHTML;
-                                data = {name_html: name_html.trim(), pp: parseFloat(pp), pp_html: pp_html.trim()};
-                                // app.result[player].push(data);
-                                app['player'+(player+1)+'data'].push(data);
+                        if(!app.failed) {
+                            if(this.status == 200) {
+                                app['player'+player+'data'] = app['player'+player+'data'].concat(JSON.parse(this.response));
+                                if(++app.load_count >= app.load_page*2) {
+                                    app.player1data.sort((a,b) => b.pp - a.pp);
+                                    app.player2data.sort((a,b) => b.pp - a.pp);
+                                }
+                            } else {
+                                with(app) {
+                                    failed = true;
+                                    player1name = '';
+                                    player2name = '';
+                                    player1data = [];
+                                    player2data = [];
+                                    load_count = 0;
+                                }
+                                alert("데이터 로드에 실패했습니다.");
                             }
-                            if(!app.player1name || !app.player2name) {
-                                app.player1name = app.name[0];
-                                app.player2name = app.name[1];
-                            }
-                            if(++app.load_count >= app.load_page*2) {
-                                app.player1data.sort((a,b) => b.pp - a.pp);
-                                app.player2data.sort((a,b) => b.pp - a.pp);
-                                // app.player1data = app.result.shift();
-                                // app.player2data = app.result.shift();
-                            }
-                        } else alert("데이터 로드에 실패했습니다.");
+                        }
                     }
                 }
-                xhr.open("GET", url, true);
-                xhr.setRequestHeader('x-requested-with', 'XMLHttpRequest');
+                xhr.open("GET", '/api/topscore/'+url, true);
                 xhr.send();
-            } */
+            }
         },
-        player2pp: function (data) {
-            return this.player2data.filter(data2 => data.name_html == data2.name_html)[0];
+        match_p2_data: function (data) {
+            return this.player2data.filter(data2 => data.name == data2.name)[0];
         },
         getWinner: function (data) {
-            return data.pp >= ((tmp=this.player2pp(data))?tmp.pp:0) ? 1 : 2
+            return data.pp >= ((tmp=this.match_p2_data(data))?tmp.pp:0) ? 1 : 2;
+        },
+        song_html: function (data) {
+            return '<span>'+data.name+'</span>' + ' <span class="'+data.difficult.replace('+','plus').toLowerCase()+'">'+data.difficult
+                +'</span><br>'+data.mapper;
+        },
+        player_html: function (player, data) {
+            if(player==2) {
+                data = this.player2data.filter(data2 => data.name == data2.name)[0];
+                if(!data) return '-';
+            }
+            return data.pp+' ( '+data.pp_weight+' )<br>'+(data.score?'점수: '+data.score:'정확도: '+data.accuracy);
         },
 
         setCookie: function (cookie_name, value, days) {
