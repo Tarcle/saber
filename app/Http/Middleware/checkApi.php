@@ -15,7 +15,7 @@ class checkApi
      */
     public function handle($request, Closure $next)
     {
-        if($request->header('api') != 'beatsaber' && $request->header('host') != 'localhost') return abort(403);
+        if($request->header('api') != 'beatsaber' && !strpos($request->header('referer'), 'comparesaber')) return abort(403);
         return $next($request);
     }
 }
