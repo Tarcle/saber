@@ -187,7 +187,6 @@ p {
     background: rgba(200,200,200,.8);
     line-height: 35px;
     color: #fff;
-    text-shadow:-1px 0 #000,0 1px #000,1px 0 #000,0 -1px #000;
 }
 #result>table tr>.song {
     width: 40%;
