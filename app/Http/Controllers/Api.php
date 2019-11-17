@@ -50,6 +50,7 @@ class Api extends Controller
 
             preg_match('/title>(.+)\'/', $content, $name);
             if(is_null($name)) return '';
+            preg_match('/flags\/([a-z]{2}).png/', $content, $country);
             preg_match('/avatar">\n\s+<img.*?src="(.*?)"/', $content, $avatar);
             preg_match('/global">.*#([0-9,]+).*#([0-9,]+)<\/a>/', $content, $rank);
             preg_match('/([0-9,.]+)pp/', $content, $pp);
@@ -59,6 +60,7 @@ class Api extends Controller
 
             $data = [
                 'name' => $name[1],
+                'country' => $country[1],
                 'avatar' => (preg_match('/^https?/', $avatar[1]) ? '' : "http://scoresaber.com").$avatar[1],
                 'rank_global' => (int)str_replace(',', '', $rank[1]),
                 'rank_country' => (int)str_replace(',', '', $rank[2]),
