@@ -83,6 +83,8 @@ class Api extends Controller
             preg_match_all('/rank">\n\s+#([0-9,]+)/', $tbody, $res);
             $rank = $res[1];
             if(is_null($rank)) return '';
+            preg_match_all('/<div style="display: flex; align-items: center; justify-content: center;">\s*<img src="(.*?)"/', $tbody, $res);
+            $thumb = $res[1];
             preg_match_all('/pp">(.*?)\s?<span/', $tbody, $res);
             $name = $res[1];
             preg_match_all('/">(Expert\+|Expert|Hard|Normal|Easy)<\/span/', $tbody, $res);
@@ -101,6 +103,7 @@ class Api extends Controller
             $list = [];
             for($j=0; $j<count($name); $j++) {
                 array_push($list, [
+                    'thumb' => 'http://scoresaber.com'.$thumb[$j],
                     'name' => $name[$j],
                     'difficult' => $difficult[$j],
                     'mapper' => $mapper[$j],

@@ -9,6 +9,7 @@
     {{-- <script data-ad-client="ca-pub-3631610053339651" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> --}}
 
     <link rel="stylesheet" href="/nanumsquare/nanumsquare.css">
+    <link rel="stylesheet" href="/nanumsquareround/nanumsquareround.min.css">
     <link rel="stylesheet" href="/css/comparesaber.css">
 </head>
 <body>
@@ -29,10 +30,10 @@
                 </div>
             </div>
             <div id="result" v-if="load_count >= load_page*2">
-                <div class="head" v-if="toggle">
+                {{-- <div class="head" v-if="toggle">
                     <p>@{{ player1name }}</p>
                     <p>@{{ player2name }}</p>
-                </div>
+                </div> --}}
                 <div class="result_bg"></div>
                 <table>
                     <tbody>

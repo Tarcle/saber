@@ -81,25 +81,23 @@ var app = new Vue({
             function loadData(url, player) {
                 var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
                 xhr.onreadystatechange = function () {
-                    if(this.readyState == 4) {
-                        if(!app.failed) {
-                            if(this.status == 200) {
-                                app['player'+player+'data'] = app['player'+player+'data'].concat(JSON.parse(this.response));
-                                if(++app.load_count >= app.load_page*2) {
-                                    app.player1data.sort((a,b) => b.pp - a.pp);
-                                    app.player2data.sort((a,b) => b.pp - a.pp);
-                                }
-                            } else {
-                                with(app) {
-                                    failed = true;
-                                    player1name = '';
-                                    player2name = '';
-                                    player1data = [];
-                                    player2data = [];
-                                    load_count = 0;
-                                }
-                                alert("데이터 로드에 실패했습니다.");
+                    if(this.readyState == 4 && !app.failed) {
+                        if(this.status == 200) {
+                            app['player'+player+'data'] = app['player'+player+'data'].concat(JSON.parse(this.response));
+                            if(++app.load_count >= app.load_page*2) {
+                                app.player1data.sort(function(a,b){return b.pp - a.pp});
+                                app.player2data.sort(function(a,b){return b.pp - a.pp});
                             }
+                        } else {
+                            with(app) {
+                                failed = true;
+                                player1name = '';
+                                player2name = '';
+                                player1data = [];
+                                player2data = [];
+                                load_count = 0;
+                            }
+                            alert("데이터 로드에 실패했습니다.");
                         }
                     }
                 }
@@ -108,7 +106,7 @@ var app = new Vue({
             }
         },
         match_p2_data: function (data) {
-            return this.player2data.filter(data2 => data.name == data2.name)[0];
+            return this.player2data.filter(function(data2){return data.name==data2.name && data.difficult==data2.difficult && data.mapper==data2.mapper})[0];
         },
         getWinner: function (data) {
             return data.pp >= ((tmp=this.match_p2_data(data))?tmp.pp:0) ? 1 : 2;
@@ -119,7 +117,7 @@ var app = new Vue({
         },
         player_html: function (player, data) {
             if(player==2) {
-                data = this.player2data.filter(data2 => data.name == data2.name)[0];
+                data = (tmp=this.match_p2_data(data))?tmp:0;
                 if(!data) return '-';
             }
             return data.pp+' ( '+data.pp_weight+' )<br>'+(data.score?'점수: '+data.score:'정확도: '+data.accuracy);
@@ -145,7 +143,7 @@ var app = new Vue({
                     return unescape(y); // unescape로 디코딩 후 값 리턴
                 }
             }
-          }
+        }
     },
     computed: {
         progress: function () {
