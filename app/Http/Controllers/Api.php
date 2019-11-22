@@ -18,24 +18,28 @@ class Api extends Controller
 
             preg_match_all('/picture">(.|\n)*?src="(.*?)"/', $tbody, $res);
             $avatar = $res[2];
+            preg_match_all('/rank">\n\s+#([0-9,]+)/', $tbody, $res);
+            $rank = $res[1];
             preg_match_all('/flags\/(.*?)\.png/', $tbody, $res);
             $country = $res[1];
             preg_match_all('/700">(.+)<\/span/', $tbody, $res);
             $name = $res[1];
             preg_match_all('/ppValue">([0-9,.]+)/', $tbody, $res);
             $pp = $res[1];
-            preg_match_all('/rank">\n\s+#([0-9,]+)/', $tbody, $res);
-            $rank = $res[1];
+            preg_match_all('/diff">\n\s+<.*?>([+-][0-9,]+|0)<\//', $tbody, $res);
+            $weekly_change = $res[1];
             preg_match_all('/href="\/u\/([0-9]+)/', $tbody, $res);
             $url = $res[1];
             $list = [];
+
             for($i=0; $i<count($name); $i++) {
                 array_push($list, [
                     'name' => $name[$i],
                     'avatar' => (preg_match('/^https?/', $avatar[$i]) ? '' : "http://scoresaber.com").$avatar[$i],
+                    'rank' => (int)str_replace(',', '', $rank[$i]),
                     'country' => $country[$i],
                     'pp' => (float)str_replace(',', '', $pp[$i]),
-                    'rank' => (int)str_replace(',', '', $rank[$i]),
+                    'weekly_change' => (int)str_replace(',', '', $weekly_change[$i]),
                     'url' => $url[$i],
                 ]);
             }
