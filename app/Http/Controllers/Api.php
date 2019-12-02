@@ -26,7 +26,7 @@ class Api extends Controller
             $name = $res[1];
             preg_match_all('/ppValue">([0-9,.]+)/', $tbody, $res);
             $pp = $res[1];
-            preg_match_all('/diff">\n\s+<.*?>([+-][0-9,]+|0)<\//', $tbody, $res);
+            preg_match_all('/diff">\n\s+<.*?>\+?(-?[0-9,]+|0)<\//', $tbody, $res);
             $weekly_change = $res[1];
             preg_match_all('/href="\/u\/([0-9]+)/', $tbody, $res);
             $url = $res[1];
