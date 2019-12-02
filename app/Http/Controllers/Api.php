@@ -26,8 +26,8 @@ class Api extends Controller
             $name = $res[1];
             preg_match_all('/ppValue">([0-9,.]+)/', $tbody, $res);
             $pp = $res[1];
-            preg_match_all('/diff">\n\s+<.*?>\+?(-?[0-9,]+|0)<\//', $tbody, $res);
-            $weekly_change = $res[1];
+            preg_match_all('/diff">\n\s+(<.*?>\+?)?(-?[0-9,]+|0|\s)\s*<\//', $tbody, $res);
+            $weekly_change = $res[2];
             preg_match_all('/href="\/u\/([0-9]+)/', $tbody, $res);
             $url = $res[1];
             $list = [];
@@ -39,7 +39,7 @@ class Api extends Controller
                     'rank' => (int)str_replace(',', '', $rank[$i]),
                     'country' => $country[$i],
                     'pp' => (float)str_replace(',', '', $pp[$i]),
-                    'weekly_change' => (int)str_replace(',', '', $weekly_change[$i]),
+                    'weekly_change' => (int)preg_replace('/[,\n]/', '', $weekly_change[$i]),
                     'url' => $url[$i],
                 ]);
             }
