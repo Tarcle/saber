@@ -108,6 +108,8 @@ class Api extends Controller
             
             $list = [];
             for($j=0; $j<count($name); $j++) {
+                if(strpos($accuracy[$j], '%')) $tmp = 'accuracy';
+                else $tmp = 'score';
                 array_push($list, [
                     'thumb' => 'http://scoresaber.com'.$thumb[$j],
                     'name' => $name[$j],
@@ -116,7 +118,7 @@ class Api extends Controller
                     'rank' => (int)str_replace(',', '', $rank[$j]),
                     'pp' => (float)str_replace(',', '', $pp[$j]),
                     'pp_weight' => (float)str_replace(',', '', $pp_weight[$j]),
-                    'accuracy' => $accuracy[$j],
+                    $tmp => $accuracy[$j],
                     'time' => $time[$j],
                 ]);
             }
