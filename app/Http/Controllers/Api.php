@@ -106,7 +106,10 @@ class Api extends Controller
             preg_match_all('/(accuracy|score): ([0-9,.]+%?(\s\([A-Z,]*\))?)<\/span/', $tbody, $res);
             $accuracy = $res[2];
             
-            $list = [];
+            preg_match('/([0-9]+)<\/a>\n\s+<\/li>\n\s+<\/ul>/', $content, $res);
+            $total_page = $res[1];
+
+            $list = [$total_page];
             for($j=0; $j<count($name); $j++) {
                 if(strpos($accuracy[$j], '%')) $tmp = 'accuracy';
                 else $tmp = 'score';
